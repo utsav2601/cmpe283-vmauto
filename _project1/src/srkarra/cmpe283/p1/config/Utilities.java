@@ -147,46 +147,53 @@ public class Utilities {
 	
 	
 	/**
-	 * Retrieves and formats some quick statistics of the virtual machine including but not limited to:
+	 * Retrieves some quick statistics of the virtual machine including but not limited to:
 	 * 	Name, OS Type, Snapshot, Power State, Running Time, CPU/Memory/HardDisk Usage
 	 * @param vm instance of the virtual machine, must not be null
-	 * @return a formatted String object containing some quick facts of the virtual machine 
+	 * @return VMStatictics object containing some quick facts of the virtual machine 
 	 * @throws RuntimeFault failed to retrieve vm's information
 	 * @throws RemoteException failed to retrieve vm's information
 	 */
-	public static String getVmStatistics(VirtualMachine vm) throws RuntimeFault, RemoteException {
+	public static VmStatistics getVmStatistics(VirtualMachine vm) throws RuntimeFault, RemoteException {
 		if(vm == null) {
 			return null;
 		}
-		
-		VirtualMachineConfigInfo vminfo 		= vm.getConfig();
-		VirtualMachineCapability vmc 			= vm.getCapability();
-		VirtualMachineRuntimeInfo vmruntime 	= vm.getRuntime();
-		VirtualMachineSummary vmsum 			= vm.getSummary();
-		VirtualMachineQuickStats vmqstats 		= vmsum.getQuickStats();
+		// Variable Initialization
+		final VirtualMachineConfigInfo vminfo 		= vm.getConfig();
+		final VirtualMachineCapability vmc 			= vm.getCapability();
+		final VirtualMachineRuntimeInfo vmruntime 	= vm.getRuntime();
+		final VirtualMachineSummary vmsum 			= vm.getSummary();
+		final VirtualMachineQuickStats vmqstats 	= vmsum.getQuickStats();
 
 		vm.refreshStorageInfo();
-		Calendar bootTime = vm.getRuntime().getBootTime();
-		String poweredState = vmruntime.getPowerState().toString();
-		String poweredOnTime = bootTime == null ? "<data missing>" : String.format("%d mins", ((GregorianCalendar.getInstance().getTimeInMillis() - bootTime.getTimeInMillis())/1000/60));
-		String commitedStorage = String.format("%d MB", (vmsum.getStorage().getCommitted()/1024/1024));
+		final Calendar 	bootTime 					= vm.getRuntime().getBootTime();
+		final String 	poweredState 				= vmruntime.getPowerState().toString();
+		final String 	poweredOnTime 				= bootTime == null ? "<data missing>" : String.format("%d mins", ((GregorianCalendar.getInstance().getTimeInMillis() - bootTime.getTimeInMillis())/1000/60));
+		final String 	commitedStorage 			= String.format("%d MB", (vmsum.getStorage().getCommitted()/1024/1024));
+		final Integer 	overallCpuUsage 			= vmqstats.getOverallCpuUsage();
+		final String 	guestFullName 				= vminfo.getGuestFullName().trim();
+		final String 	ipAddress 					= vmsum.getGuest().getIpAddress();
+		final Integer 	guestMemoryUsage 			= vmqstats.getGuestMemoryUsage();
+		final Integer 	privateMemory 				= vmqstats.getPrivateMemory();
+		final boolean 	multipleSnapshotsSupported 	= vmc.isMultipleSnapshotsSupported();
+		final String 	vmName 						= vm.getName().trim();
+		final VmStatistics vmStats;
 		
-		return  String.format(
-				" Virtual Machine: %s                       \n" +
-				" ------------------------------------------\n" +
-				" Guest OS:               %-20s             \n" +
-				" Guest IP:               %-20s             \n" +
-				" Supports Snapshots:     %-20s             \n" +
-				" Power State:            %-20s             \n" +
-				" System Uptime (sec):    %-20s             \n" +
-				" Consumed Host CPU:      %-20s             \n" +
-				" Consumed Host Memory:   %-20s             \n" +
-				" Maximum Host Memory:    %-20s             \n" +
-				" Used Storage:           %-20s             \n" +
-				" ==============================================================\n",
-						vm.getName().trim(), vminfo.getGuestFullName().trim(), vmsum.getGuest().getIpAddress(),
-						vmc.isMultipleSnapshotsSupported(), poweredState, poweredOnTime, vmqstats.getOverallCpuUsage(),
-						vmqstats.getGuestMemoryUsage(), vmqstats.getPrivateMemory(), commitedStorage);
+		// Create VM Statistics Object and assign local values
+		vmStats = new VmStatistics(); 
+		
+		vmStats.setCpuUsage			( overallCpuUsage 			 );
+		vmStats.setGuestFullName	( guestFullName 			 );
+		vmStats.setGuestIpAddress	( ipAddress 				 );
+		vmStats.setGuestMemoryUsage	( guestMemoryUsage 			 );
+		vmStats.setMaxHostMemory	( privateMemory 			 );
+		vmStats.setPowerState		( poweredState 				 );
+		vmStats.setStorageUsed		( commitedStorage 			 );
+		vmStats.setSupportsSnapShot	( multipleSnapshotsSupported );
+		vmStats.setSystemUpTime		( poweredOnTime 			 );
+		vmStats.setVmName			( vmName 					 );
+
+		return  vmStats;
 	}
 	
 	

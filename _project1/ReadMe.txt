@@ -1,7 +1,7 @@
 The main class is the "VMEngine.java" class located in the srkarra.cmpe283.p1 package
 
 
-It takes the properties filename as the parmeter. For example:
+It takes the properties filename as the parameter. For example:
     java -cp ... srkarra.cmpe283.p1.VMEngine config.properties
     
     
