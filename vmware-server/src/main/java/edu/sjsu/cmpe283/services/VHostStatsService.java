@@ -18,5 +18,7 @@ public class VHostStatsService {
         return statsRepo.findAll();
     }
     
-    
+    public VHostStats saveStats(VHostStats vhoststats) {
+        return statsRepo.save(vhoststats);
+    }
 }

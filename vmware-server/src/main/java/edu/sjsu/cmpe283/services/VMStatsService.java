@@ -19,4 +19,9 @@ public class VMStatsService {
     }
     
     
+    public VMStats saveStats(VMStats vmstats) {
+        return statsRepo.save(vmstats);
+    }
+    
+    
 }
