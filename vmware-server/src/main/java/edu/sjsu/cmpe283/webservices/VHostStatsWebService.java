@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.sjsu.cmpe283.entities.Stats;
-import edu.sjsu.cmpe283.services.StatsService;
+import edu.sjsu.cmpe283.entities.VHostStats;
+import edu.sjsu.cmpe283.services.VHostStatsService;
 
 @RestController
-@RequestMapping("/statistics")
-public class StatsWebService {
-    private static Log logger = LogFactory.getLog(StatsWebService.class);
+@RequestMapping("/statistics/vhost")
+public class VHostStatsWebService {
+    private static Log logger = LogFactory.getLog(VHostStatsWebService.class);
     
     @Autowired
-    StatsService statsService;
+    VHostStatsService vHostStatsService;
 
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getData() {
         
         try {
-            List<Stats> stats = statsService.getAllStats();
-            return new ResponseEntity<List<Stats>>(stats, HttpStatus.OK);
+            List<VHostStats> stats = vHostStatsService.getAllStats();
+            return new ResponseEntity<List<VHostStats>>(stats, HttpStatus.OK);
         }
         catch (Exception e) {
             logger.info("Error: " + e.getMessage());

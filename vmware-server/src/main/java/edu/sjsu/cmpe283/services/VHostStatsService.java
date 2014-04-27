@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.sjsu.cmpe283.entities.Stats;
-import edu.sjsu.cmpe283.repositories.StatsRepository;
+import edu.sjsu.cmpe283.entities.VHostStats;
+import edu.sjsu.cmpe283.repositories.VHostStatsRepository;
 
 @Service
-public class StatsService {
+public class VHostStatsService {
     
     @Autowired
-    StatsRepository statsRepo;
+    VHostStatsRepository statsRepo;
     
-    public List<Stats> getAllStats() {
+    public List<VHostStats> getAllStats() {
         return statsRepo.findAll();
     }
     
