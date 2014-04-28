@@ -41,7 +41,7 @@ public class VHostStatsWebService {
     }
     
     @SuppressWarnings("rawtypes")
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVHostStats(@RequestBody(required = true) @Valid VHostStats vhoststats) {
         try {
             return new ResponseEntity<VHostStats>(vHostStatsService.saveStats(vhoststats), HttpStatus.OK);

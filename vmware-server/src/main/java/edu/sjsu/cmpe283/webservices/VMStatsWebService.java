@@ -42,7 +42,7 @@ public class VMStatsWebService {
     
     
     @SuppressWarnings("rawtypes")
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVMStats(@RequestBody(required = true) @Valid VMStats vmstats) {
         try {
             return new ResponseEntity<VMStats>(vmStatsService.saveStats(vmstats), HttpStatus.OK);

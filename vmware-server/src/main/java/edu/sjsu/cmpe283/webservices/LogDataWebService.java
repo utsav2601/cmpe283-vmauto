@@ -44,7 +44,7 @@ public class LogDataWebService {
     
     
     @SuppressWarnings("rawtypes")
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewLogData(@RequestBody(required = true) @Valid LogData logdata) {
         try {
             return new ResponseEntity<LogData>(logDataService.saveLogData(logdata), HttpStatus.OK);
