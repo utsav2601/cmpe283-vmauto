@@ -14,24 +14,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.sjsu.cmpe283.entities.VHostStats;
-import edu.sjsu.cmpe283.services.VHostStatsService;
+import edu.sjsu.cmpe283.entities.LogData;
+import edu.sjsu.cmpe283.services.LogDataService;
+
 
 @RestController
-@RequestMapping("/stats/vhost")
-public class VHostStatsWebService {
-    private static Log logger = LogFactory.getLog(VHostStatsWebService.class);
+@RequestMapping("/stats/log")
+public class LogDataWebService {
+    private static Log logger = LogFactory.getLog(LogDataWebService.class);
     
     @Autowired
-    VHostStatsService vHostStatsService;
+    LogDataService logDataService;
 
+    
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getData() {
         
         try {
-            List<VHostStats> stats = vHostStatsService.getAllStats();
-            return new ResponseEntity<List<VHostStats>>(stats, HttpStatus.OK);
+            List<LogData> stats = logDataService.getAllStats();
+            return new ResponseEntity<List<LogData>>(stats, HttpStatus.OK);
         }
         catch (Exception e) {
             logger.info("Error: " + e.getMessage());
@@ -40,11 +42,12 @@ public class VHostStatsWebService {
         }
     }
     
+    
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity postNewVHostStats(@RequestBody(required = true) @Valid VHostStats vhoststats) {
+    public ResponseEntity postNewLogData(@RequestBody(required = true) @Valid LogData logdata) {
         try {
-            return new ResponseEntity<VHostStats>(vHostStatsService.saveStats(vhoststats), HttpStatus.OK);
+            return new ResponseEntity<LogData>(logDataService.saveLogData(logdata), HttpStatus.OK);
         }
         catch (Exception e) {
             logger.info("Error: " + e.getMessage());
