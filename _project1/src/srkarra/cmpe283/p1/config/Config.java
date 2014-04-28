@@ -46,10 +46,16 @@ public class Config {
 	
 	public static final String VMWARE_IDENTIFIER_VIRTUAL_MACHINE 		= "VirtualMachine";
 	public static final String VMWARE_IDENTIFIER_VHOSTS					= "HostSystem";
+	public static final String VMWARE_IDENTIFIER_VHOSTS_NAME			= "name";
 	public static final String VMWARE_IDENTIFIER_DATACENTER		 		= "Datacenter";
 	public static final String VMWARE_SNAPSHOT_NAME_SUFFIX				= "-snapshot";
 	public static final String VMWARE_TASK_SUCCESS_STRING 				= "success";
 	public static final String VMWARE_POWER_ON_ALARM_TRIG_SUFFIX		= "-OnAlarmTrig";
+	
+	public static final String 	REST_API_POST_HOST_URL	  	= "http://cmpe283.srkarra.com/stats/host";
+	public static final String 	REST_API_POST_VM_URL		= "http://cmpe283.srkarra.com/stats/vm";
+	public static final String 	REST_API_POST_VM_LOG		= "http://cmpe283.srkarra.com/stats/log";
+	public static final int 	REST_API_RESPONSE_SUCCESS 	= 200;
 	
 	private static Config config;
 	private Properties properties;
@@ -121,6 +127,7 @@ public class Config {
 		}
 		catch (Exception e) {
 			System.err.println("FAILED TO CREATE A SERVICE INSTANCE!");
+			e.printStackTrace();
 			return null; 
 		}
 	}

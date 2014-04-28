@@ -1,9 +1,7 @@
 package srkarra.cmpe283.p1;
 
 import java.io.IOException;
-
 import srkarra.cmpe283.p1.config.Config;
-import srkarra.cmpe283.p1.manager.UserPrompt;
 
 /**
  * VMEngine Class
@@ -15,7 +13,8 @@ import srkarra.cmpe283.p1.manager.UserPrompt;
  */
 public class VMEngine {
 
-	public static void main(String[] args) throws IOException {
+		public static void main(String[] args) throws IOException {
+		
 		// Print usage information
 		if(args.length <= 0) {
 			System.out.println("Must provide the properties file.");
@@ -27,8 +26,10 @@ public class VMEngine {
 		String filename = args[0];
 		Config.createInstance(filename);
 		
-		// Start the Prompt System
-		UserPrompt userPrompt = new UserPrompt();
-		userPrompt.enterUserPrompt();
+		Service vmService = new Service();
+		vmService.start();
+		
 	}
+	
+	
 }
