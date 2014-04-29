@@ -25,7 +25,6 @@ public class LogDataWebService {
     
     @Autowired
     LogDataService logDataService;
-
     
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.GET)
