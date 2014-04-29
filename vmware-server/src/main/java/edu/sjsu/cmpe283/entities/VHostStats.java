@@ -18,17 +18,17 @@ public class VHostStats {
     private Integer netUsageAverage;
     private Integer datastoreReadAverage;
     private Integer dataStoreWriteAverage;
+    private Integer diskUsageAverage;
     private Integer netBytesRxAverage;
     private Integer netBytesTxAverage;
     private Date timeStamp;
-    
     
     public VHostStats() {
         
     }
     
-    public VHostStats(String id, String name, Integer diskReadAverage, Integer diskWriteAverage, Integer diskTotalLantency, Integer netUsageAverage, Integer datastoreReadAverage, Integer dataStoreWriteAverage, Integer netBytesRxAverage,
-            Integer netBytesTxAverage, Date timeStamp) {
+    public VHostStats(String id, String name, Integer diskReadAverage, Integer diskWriteAverage, Integer diskTotalLantency, Integer netUsageAverage, Integer datastoreReadAverage, Integer dataStoreWriteAverage, Integer diskUsageAverage,
+            Integer netBytesRxAverage, Integer netBytesTxAverage, Date timeStamp) {
         super();
         this.id = id;
         this.name = name;
@@ -38,9 +38,19 @@ public class VHostStats {
         this.netUsageAverage = netUsageAverage;
         this.datastoreReadAverage = datastoreReadAverage;
         this.dataStoreWriteAverage = dataStoreWriteAverage;
+        this.diskUsageAverage = diskUsageAverage;
         this.netBytesRxAverage = netBytesRxAverage;
         this.netBytesTxAverage = netBytesTxAverage;
         this.timeStamp = timeStamp;
+    }
+
+
+    public Integer getDiskUsageAverage() {
+        return diskUsageAverage;
+    }
+
+    public void setDiskUsageAverage(Integer diskUsageAverage) {
+        this.diskUsageAverage = diskUsageAverage;
     }
 
     public String getId() {
