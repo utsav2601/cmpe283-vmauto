@@ -49,15 +49,16 @@ public class Service extends Thread {
 			}
 			
 			//Store Host Stats
-			/*ManagedEntity[] hosts = new InventoryNavigator(serviceInstance.getRootFolder()).searchManagedEntities(new String[][] { {Config.VMWARE_IDENTIFIER_VHOSTS, Config.VMWARE_IDENTIFIER_VHOSTS_NAME }, }, true);
+			ManagedEntity[] hosts = new InventoryNavigator(serviceInstance.getRootFolder()).searchManagedEntities(new String[][] { {Config.VMWARE_IDENTIFIER_VHOSTS, Config.VMWARE_IDENTIFIER_VHOSTS_NAME }, }, true);
 			for(int i=0; i < hosts.length; i++)
 			{
 				HostSystem hostSystem = (HostSystem) hosts[i];
 				System.out.println(Utilities.getHostStatistics(hostSystem, serviceInstance));
-			}*/
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Failed to fetch statistics. Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

@@ -52,7 +52,7 @@ public class Config {
 	public static final String VMWARE_TASK_SUCCESS_STRING 				= "success";
 	public static final String VMWARE_POWER_ON_ALARM_TRIG_SUFFIX		= "-OnAlarmTrig";
 	
-	public static final String 	REST_API_POST_HOST_URL	  	= "http://cmpe283.srkarra.com/stats/host";
+	public static final String 	REST_API_POST_HOST_URL	  	= "http://cmpe283.srkarra.com/stats/vhost";
 	public static final String 	REST_API_POST_VM_URL		= "http://cmpe283.srkarra.com/stats/vm";
 	public static final String 	REST_API_POST_VM_LOG		= "http://cmpe283.srkarra.com/stats/log";
 	public static final int 	REST_API_RESPONSE_SUCCESS 	= 200;
