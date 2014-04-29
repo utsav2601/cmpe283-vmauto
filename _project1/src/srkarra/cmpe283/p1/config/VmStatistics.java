@@ -3,100 +3,138 @@
  */
 package srkarra.cmpe283.p1.config;
 
+import java.util.Date;
+
+
 /**
  * @author Asim Mughni
  * Object that will contain all the VM Stats with their respective getter and setters
  */
 public class VmStatistics {
 	
-	private static boolean s_supportsSnapShot = false;
-	private static Integer s_cpuUsage = 0;
-	private static Integer s_guestMemoryUsage = 0;
-	private static Integer s_maxHostMemory = 0;
-	private static String  s_vmName = "";
-	private static String  s_guestFullName = "";
-	private static String  s_guestIpAddress = "";
-	private static String  s_powerState = "";
-	private static String  s_systemUpTime = "";
-	private static String  s_storageUsed = "";
+	private boolean supportsSnapShot = false;
+	private Integer cpuUsage = 0;
+	private Integer guestMemoryUsage = 0;
+	private Integer maxHostMemory = 0;
+	private String  vmName = "";
+	private String  guestFullName = "";
+	private String  guestIpAddress = "";
+	private String  powerState = "";
+	private String  systemUpTime = "";
+	private String  storageUsed = "";
+	private Date 	timeStamp = null;
 	
-	public  String getGuestIpAddress() {
-		return s_guestIpAddress;
+	/**
+	 * @return the timeStamp
+	 */
+	public Date getTimeStamp() {
+		if(timeStamp == null)
+			timeStamp = new Date();
+		return timeStamp;
 	}
 
-	public  void setGuestIpAddress(String guestIpAddress) {
-		VmStatistics.s_guestIpAddress = guestIpAddress;
+	/**
+	 * @param timeStamp the timeStamp to set
+	 */
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
-	public  boolean getSupportsSnapShot() {
-		return s_supportsSnapShot;
+	public String getGuestIpAddress() {
+		return guestIpAddress;
 	}
 
-	public  void setSupportsSnapShot(boolean b) {
-		VmStatistics.s_supportsSnapShot = b;
+	public void setGuestIpAddress(String guestIpAddress) {
+		this.guestIpAddress = guestIpAddress;
 	}
 
-	public  String getPowerState() {
-		return s_powerState;
+	public boolean getSupportsSnapShot() {
+		return supportsSnapShot;
 	}
 
-	public  void setPowerState(String powerState) {
-		VmStatistics.s_powerState = powerState;
+	public void setSupportsSnapShot(boolean b) {
+		this.supportsSnapShot = b;
 	}
 
-	public  String getSystemUpTime() {
-		return s_systemUpTime;
+	public String getPowerState() {
+		return powerState;
 	}
 
-	public  void setSystemUpTime(String systemUpTime) {
-		VmStatistics.s_systemUpTime = systemUpTime;
+	public void setPowerState(String powerState) {
+		this.powerState = powerState;
 	}
 
-	public  Integer getCpuUsage() {
-		return s_cpuUsage;
+	public String getSystemUpTime() {
+		return systemUpTime;
 	}
 
-	public  void setCpuUsage(Integer integer) {
-		VmStatistics.s_cpuUsage = integer;
+	public void setSystemUpTime(String systemUpTime) {
+		this.systemUpTime = systemUpTime;
 	}
 
-	public  Integer getGuestMemoryUsage() {
-		return s_guestMemoryUsage;
+	public Integer getCpuUsage() {
+		return cpuUsage;
 	}
 
-	public  void setGuestMemoryUsage(Integer integer) {
-		VmStatistics.s_guestMemoryUsage = integer;
+	public void setCpuUsage(Integer integer) {
+		this.cpuUsage = integer;
 	}
 
-	public  Integer getMaxHostMemory() {
-		return s_maxHostMemory;
+	public Integer getGuestMemoryUsage() {
+		return guestMemoryUsage;
 	}
 
-	public  void setMaxHostMemory(Integer integer) {
-		VmStatistics.s_maxHostMemory = integer;
+	public void setGuestMemoryUsage(Integer integer) {
+		this.guestMemoryUsage = integer;
 	}
 
-	public  String getStorageUsed() {
-		return s_storageUsed;
+	public Integer getMaxHostMemory() {
+		return maxHostMemory;
 	}
 
-	public  void setStorageUsed(String storageUsed) {
-		VmStatistics.s_storageUsed = storageUsed;
+	public void setMaxHostMemory(Integer integer) {
+		this.maxHostMemory = integer;
 	}
 
-	public  String getGuestFullName() {
-		return s_guestFullName;
+	public String getStorageUsed() {
+		return storageUsed;
 	}
 
-	public  void setGuestFullName(String guestFullName) {
-		VmStatistics.s_guestFullName = guestFullName;
+	public void setStorageUsed(String storageUsed) {
+		this.storageUsed = storageUsed;
 	}
 
-	public  String getVmName() {
-		return s_vmName;
+	public String getGuestFullName() {
+		return guestFullName;
 	}
 
-	public  void setVmName(String vmName) {
-		VmStatistics.s_vmName = vmName;
+	public void setGuestFullName(String guestFullName) {
+		this.guestFullName = guestFullName;
 	}
+
+	public String getVmName() {
+		return vmName;
+	}
+
+	public void setVmName(String vmName) {
+		this.vmName = vmName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "VmStatistics [supportsSnapShot=" + supportsSnapShot
+				+ ", cpuUsage=" + cpuUsage + ", guestMemoryUsage="
+				+ guestMemoryUsage + ", maxHostMemory=" + maxHostMemory
+				+ ", vmName=" + vmName + ", guestFullName="
+				+ guestFullName + ", guestIpAddress=" + guestIpAddress
+				+ ", powerState=" + powerState + ", systemUpTime="
+				+ systemUpTime + ", storageUsed=" + storageUsed
+				+ ", timeStamp=" + timeStamp + "]";
+	}
+	
+	
+	
 }

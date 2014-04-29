@@ -1,7 +1,14 @@
 package srkarra.cmpe283.p1.config;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,13 +18,25 @@ import java.util.List;
 import java.util.Properties;
 
 import srkarra.cmpe283.p1.config.Config.ConfigIdents;
+import srkarra.cmpe283.p1.config.RestApi.HTTPPostResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.vmware.vim25.AlarmAction;
 import com.vmware.vim25.AlarmSpec;
 import com.vmware.vim25.AlarmTriggeringAction;
 import com.vmware.vim25.ManagedObjectReference;
 import com.vmware.vim25.MethodAction;
 import com.vmware.vim25.MethodActionArgument;
+import com.vmware.vim25.PerfEntityMetric;
+import com.vmware.vim25.PerfEntityMetricBase;
+import com.vmware.vim25.PerfMetricId;
+import com.vmware.vim25.PerfMetricIntSeries;
+import com.vmware.vim25.PerfMetricSeries;
+import com.vmware.vim25.PerfProviderSummary;
+import com.vmware.vim25.PerfQuerySpec;
+import com.vmware.vim25.PerfSampleInfo;
 import com.vmware.vim25.RuntimeFault;
 import com.vmware.vim25.StateAlarmExpression;
 import com.vmware.vim25.StateAlarmOperator;
@@ -34,6 +53,7 @@ import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.HostSystem;
 import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
+import com.vmware.vim25.mo.PerformanceManager;
 import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.Task;
 import com.vmware.vim25.mo.VirtualMachine;
@@ -192,10 +212,133 @@ public class Utilities {
 		vmStats.setSupportsSnapShot	( multipleSnapshotsSupported );
 		vmStats.setSystemUpTime		( poweredOnTime 			 );
 		vmStats.setVmName			( vmName 					 );
-
+		vmStats.setTimeStamp		( new Date()				 );
+		System.out.println(vmStats);
+		
+		ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		try {
+			String writeValue = mapper.writeValueAsString(vmStats);
+			HTTPPostResponse response = doPost(Config.REST_API_POST_VM_URL, writeValue);
+			System.out.println(response);
+			if(response != null)
+			{
+			if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
+			{
+				System.out.println("Data saved succesfully for " + vmStats.getVmName());
+			}
+			else
+				System.out.println("Unable to get response from webservice");
+			}
+		} catch (JsonProcessingException e) {
+			System.out.println("Json Processing Exception: " + e.getMessage());
+		}
+		
 		return  vmStats;
 	}
 	
+	/**
+	 * Retrieves some quick statistics of the vHost including but not limited to:
+	 * 	Name, OS Type, Snapshot, Power State, Running Time, CPU/Memory/HardDisk Usage
+	 * @param host instance of the virtual machine, must not be null
+	 * @return VMStatictics object containing some quick facts of the virtual machine 
+	 * @throws RuntimeFault failed to retrieve vm's information
+	 * @throws RemoteException failed to retrieve vm's information
+	 */
+	public static HostStatistics getHostStatistics(HostSystem host, ServiceInstance si) throws RuntimeFault, RemoteException {
+		if(host == null) {
+			return null;
+		}
+		HostStatistics hostStats;
+		
+		hostStats = getHostMetrics(si, host.getName());		
+		
+		System.out.println(hostStats);
+		
+		ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		try {
+			String writeValue = mapper.writeValueAsString(hostStats);
+			HTTPPostResponse response = doPost(Config.REST_API_POST_HOST_URL, writeValue);
+			System.out.println(response);
+			if(response != null)
+			{
+			if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
+			{
+				System.out.println("Data saved succesfully for " + hostStats.getName());
+			}
+			else
+				System.out.println("Unable to get response from webservice");
+			}
+		} catch (JsonProcessingException e) {
+			System.out.println("Json Processing Exception: " + e.getMessage());
+		}
+		
+		return  hostStats;
+	}
+	
+	public static LogStatistics getLogStatistics(String command, String vmName) throws RuntimeFault, RemoteException {
+		LogStatistics logStats = new LogStatistics();
+		try {
+			logStats.setFileContent(getStats(command));
+			logStats.setFileName(command);
+			logStats.setVmName(vmName);
+			logStats.setTimeStamp(new Date());
+			System.out.println(logStats);
+		
+			ObjectMapper mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		
+			String writeValue = mapper.writeValueAsString(logStats);
+			HTTPPostResponse response = doPost(Config.REST_API_POST_VM_LOG, writeValue);
+			System.out.println(response);
+			if(response != null)
+			{
+			if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
+			{
+				System.out.println("Data saved succesfully for " + logStats.getVmName());
+			}
+			else
+				System.out.println("Unable to get response from webservice");
+			}
+			
+		} 
+		catch (JsonProcessingException e) {
+			System.out.println("Json Processing Exception: " + e.getMessage());
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("File Not Found Exception: " + e.getMessage());
+        }
+		catch (IOException e){
+			System.out.println("IO Exception: " + e.getMessage());
+		}
+
+		return  logStats;
+	}
+	
+	private static String getStats(String cmd) throws IOException
+	{
+		Runtime runTime = Runtime.getRuntime();
+		Process process = runTime.exec(cmd);
+
+		return getCommandResullt(process);
+	}
+
+	/**
+	 * @param cmdResult
+	 * @param process
+	 * @return
+	 * @throws IOException
+	 */
+	private static String getCommandResullt(Process process)
+			throws IOException {
+		String cmdResult = null;
+		BufferedReader bufferedReader = new BufferedReader(new
+		InputStreamReader(process.getInputStream()));
+		String inputLine;
+		while ((inputLine = bufferedReader.readLine()) != null) {
+			cmdResult += inputLine;
+		}		
+		bufferedReader.close();
+		return cmdResult;
+	}
 	
 	
 	/**
@@ -444,6 +587,145 @@ public class Utilities {
 		return null;
 	}
 	
+	public static HostStatistics getHostMetrics(ServiceInstance si, String vHostName)
+	{
+		try {
+			HostStatistics statistics = new HostStatistics();
+			int[] metricID = {125, 130, 131, 132, 143, 180, 181, 394, 395, 172};
+			PerformanceManager perfManager = si.getPerformanceManager();
+			
+			ManagedEntity vHost =
+					new InventoryNavigator(si.getRootFolder()).searchManagedEntity(Config.VMWARE_IDENTIFIER_VHOSTS, vHostName);
+			if (vHost==null) 
+				System.out.println("vHost "+ vHostName +" not found");
+			
+			PerfProviderSummary pps = perfManager.queryPerfProviderSummary(vHost);
+			int refreshRate = pps.getRefreshRate();
+			
+			ArrayList<PerfMetricId> wantedPerformanceMetrics = new ArrayList<PerfMetricId>();
+			
+			for (int i=0; i < metricID.length; i++)
+			{
+				PerfMetricId perfMetric = new PerfMetricId();
+				perfMetric.setCounterId(metricID[i]);
+					// TODO not sure if I have to do this
+				perfMetric.setInstance("");
+				wantedPerformanceMetrics.add(perfMetric);
+			}
+			
+			PerfMetricId[] pmis = wantedPerformanceMetrics.toArray(
+					new PerfMetricId[(wantedPerformanceMetrics.size())]);
+			
+			Calendar cal = Calendar.getInstance();
+			
+			// Set up query for metrics
+			PerfQuerySpec qSpec = new PerfQuerySpec();
+			qSpec.setEntity(vHost.getMOR());
+			qSpec.setMaxSample(3);
+			qSpec.setMetricId(pmis);
+			qSpec.setIntervalId(refreshRate);
+			qSpec.setFormat("normal");
+			qSpec.setStartTime(cal);
+			qSpec.setEndTime(cal);
+			
+			 // Querying
+			 PerfEntityMetricBase[] pembs = perfManager.queryPerf(new PerfQuerySpec[] {qSpec});
+		
+			for (int i=0; pembs != null && i<pembs.length; i++)
+			{
+				PerfEntityMetricBase val = pembs[i];
+				PerfEntityMetric pem = (PerfEntityMetric) val;
+				PerfMetricSeries[] vals = pem.getValue();
+				PerfSampleInfo[] infos = pem.getSampleInfo();
+				
+				for (int j=0; vals != null && j<vals.length; ++j)
+				{
+					
+					PerfMetricIntSeries val1 = (PerfMetricIntSeries) vals[j];
+					System.out.println("Printing counter ID: " + val1.getId().getCounterId());
+					long[] longs = val1.getValue();
+					if (val1.getId().getCounterId() == 125)
+						statistics.setDiskUsageAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 130)
+						statistics.setDiskReadAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 131)
+						statistics.setDiskWriteAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 132)
+						statistics.setDiskTotalLantency((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 143)
+						statistics.setNetUsageAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 180)
+						statistics.setDatastoreReadAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 181)
+						statistics.setDataStoreWriteAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 394)
+						statistics.setNetBytesRxAverage((int) longs[longs.length-1]);
+					else if (val1.getId().getCounterId() == 395)
+						statistics.setNetBytesTxAverage((int) longs[longs.length-1]);
+					
+					statistics.setName(vHostName);
+					statistics.setTimeStamp(new Date());
+					
+					System.out.println("CounterID: " + val1.getId().getCounterId()
+							+ " Timestamp: " + infos[longs.length-1].getTimestamp().getTime()
+							+ " Metric Value: " + longs[longs.length-1]); 
+									
+				}
+			}
+			return statistics;
+		} catch (RuntimeFault e) {
+			System.out.println("Runtime Fault: " + e.getMessage());
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			System.out.println("Remote Exception" + e.getMessage());
+		}
+		return null;
+		
+	}
 	
-	
+	/**
+     * HTTP Post
+     */
+    public static HTTPPostResponse doPost(String url, String payload) {
+        try {
+            // Create Connection
+            HttpURLConnection post = (HttpURLConnection) new URL(url).openConnection();
+
+            post.setRequestMethod("POST");
+            post.setDoOutput(true);
+            post.setRequestProperty("Content-Type", "application/json");
+
+            // Write URL Params
+            DataOutputStream outstream = new DataOutputStream(post.getOutputStream());
+            outstream.writeBytes(payload);
+            outstream.flush();
+            outstream.close();
+            
+            // Get Response Code
+
+            HTTPPostResponse response = new HTTPPostResponse(post.getResponseCode());
+
+            // Get Response Msg if post returns a valid HTTP code
+
+            if(response.getResponseCode() == 200) {
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(post.getInputStream()));
+
+                String inputLine;
+                String responseMsg = "";
+
+                while ((inputLine = in.readLine()) != null) {
+                    responseMsg += inputLine;
+                }
+                in.close();
+               
+                response.setResponseMsg(responseMsg);
+            }
+            return response;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
