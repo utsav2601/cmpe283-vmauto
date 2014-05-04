@@ -19,7 +19,7 @@ import edu.sjsu.cmpe283.services.OldLogDataService;
 
 
 @RestController
-@RequestMapping("/stats/log/old")
+@RequestMapping("/stats/log/v1")
 public class OldLogDataWebService {
     private static Log logger = LogFactory.getLog(OldLogDataWebService.class);
     
