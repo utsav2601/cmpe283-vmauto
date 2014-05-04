@@ -2,7 +2,6 @@ package srkarra.cmpe283.p1.config;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,10 +14,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
+
 import srkarra.cmpe283.p1.config.RestApi.HTTPPostResponse;
+import com.vmware.vim25.HostCpuInfo;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.vmware.vim25.HostListSummary;
+import com.vmware.vim25.HostListSummaryQuickStats;
 import com.vmware.vim25.PerfEntityMetric;
 import com.vmware.vim25.PerfEntityMetricBase;
 import com.vmware.vim25.PerfMetricId;
@@ -34,7 +38,6 @@ import com.vmware.vim25.VirtualMachineQuickStats;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualMachineSummary;
 import com.vmware.vim25.mo.HostSystem;
-import com.vmware.vim25.mo.InventoryNavigator;
 import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.PerformanceManager;
 import com.vmware.vim25.mo.ServiceInstance;
@@ -81,7 +84,7 @@ public class Utilities {
 	 * @throws RuntimeFault failed to retrieve vm's information
 	 * @throws RemoteException failed to retrieve vm's information
 	 */
-	public static VmStatistics getVmStatistics(VirtualMachine vm) throws RuntimeFault, RemoteException {
+	public static VmStatistics getVmStatistics(VirtualMachine vm, ServiceInstance si) throws RuntimeFault, RemoteException {
 		if(vm == null) {
 			return null;
 		}
@@ -107,7 +110,7 @@ public class Utilities {
 		final VmStatistics vmStats;
 		
 		// Create VM Statistics Object and assign local values
-		vmStats = new VmStatistics(); 
+		vmStats = (VmStatistics) getMetrics(si, vm.getName(), vm, Config.TYPE_VIRTUALMACHINE); 
 		
 		vmStats.setCpuUsage			( overallCpuUsage 			 );
 		vmStats.setGuestFullName	( guestFullName 			 );
@@ -118,7 +121,7 @@ public class Utilities {
 		vmStats.setStorageUsed		( commitedStorage 			 );
 		vmStats.setSupportsSnapShot	( multipleSnapshotsSupported );
 		vmStats.setSystemUpTime		( poweredOnTime 			 );
-		vmStats.setVmName			( vmName 					 );
+		vmStats.setName				( vmName 					 );
 		vmStats.setTimeStamp		( new Date()				 );
 		System.out.println(vmStats);
 		
@@ -129,12 +132,10 @@ public class Utilities {
 			System.out.println(response);
 			if(response != null)
 			{
-			if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
-			{
-				System.out.println("Data saved succesfully for " + vmStats.getVmName());
-			}
-			else
-				System.out.println("Unable to get response from webservice");
+				if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
+					System.out.println("Data saved succesfully for " + vmStats.getName());
+				else
+					System.out.println("Unable to get response from webservice");
 			}
 		} catch (JsonProcessingException e) {
 			System.out.println("Json Processing Exception: " + e.getMessage());
@@ -156,8 +157,23 @@ public class Utilities {
 			return null;
 		}
 		HostStatistics hostStats;
+		HostCpuInfo cpuInfo = host.getHardware().getCpuInfo();
+		final HostListSummary hostListSummary 		= host.getSummary();
+		final HostListSummaryQuickStats hostqstats 	= hostListSummary.getQuickStats();
 		
-		hostStats = getHostMetrics(si, host.getName());		
+		final Integer 	overallCpuUsage 			= hostqstats.getOverallCpuUsage();
+		final Integer 	overallMemUsage 			= hostqstats.getOverallMemoryUsage();
+		final Integer 	distCpuFairness 			= hostqstats.getDistributedCpuFairness();
+		final Integer 	distMemFairness 			= hostqstats.getDistributedMemoryFairness();
+		final long   	cpuHz						= cpuInfo.getHz() * cpuInfo.getNumCpuCores();
+		
+		hostStats = (HostStatistics) getMetrics(si, host.getName(), host, Config.TYPE_HOST);		
+		
+		hostStats.setCpuHz(cpuHz);
+		hostStats.setCpuUsage(overallCpuUsage);
+		hostStats.setMemUsage(overallMemUsage);
+		hostStats.setCpuFairness(distCpuFairness);
+		hostStats.setMemFairness(distMemFairness);
 		
 		System.out.println(hostStats);
 		
@@ -168,13 +184,12 @@ public class Utilities {
 			System.out.println(response);
 			if(response != null)
 			{
-			if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
-			{
-				System.out.println("Data saved succesfully for " + hostStats.getName());
+				if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
+					System.out.println("Data saved succesfully for " + hostStats.getName());
+				else
+					System.out.println("Unable to get response from webservice");
 			}
-			else
-				System.out.println("Unable to get response from webservice");
-			}
+			
 		} catch (JsonProcessingException e) {
 			System.out.println("Json Processing Exception: " + e.getMessage());
 		}
@@ -247,19 +262,13 @@ public class Utilities {
 		return cmdResult;
 	}
 	
-	public static HostStatistics getHostMetrics(ServiceInstance si, String vHostName)
+	public static Object getMetrics(ServiceInstance si, String entityName, ManagedEntity vEntity, int type)
 	{
 		try {
-			HostStatistics statistics = new HostStatistics();
 			int[] metricID = {125, 130, 131, 132, 143, 180, 181, 394, 395, 172};
 			PerformanceManager perfManager = si.getPerformanceManager();
 			
-			ManagedEntity vHost =
-					new InventoryNavigator(si.getRootFolder()).searchManagedEntity(Config.VMWARE_IDENTIFIER_VHOSTS, vHostName);
-			if (vHost==null) 
-				System.out.println("vHost "+ vHostName +" not found");
-			
-			PerfProviderSummary pps = perfManager.queryPerfProviderSummary(vHost);
+			PerfProviderSummary pps = perfManager.queryPerfProviderSummary(vEntity);
 			int refreshRate = pps.getRefreshRate();
 			
 			ArrayList<PerfMetricId> wantedPerformanceMetrics = new ArrayList<PerfMetricId>();
@@ -277,7 +286,7 @@ public class Utilities {
 			
 			// Set up query for metrics
 			PerfQuerySpec qSpec = new PerfQuerySpec();
-			qSpec.setEntity(vHost.getMOR());
+			qSpec.setEntity(vEntity.getMOR());
 			qSpec.setMaxSample(3);
 			qSpec.setMetricId(pmis);
 			qSpec.setIntervalId(refreshRate);
@@ -286,6 +295,15 @@ public class Utilities {
 			
 			try { pembs = perfManager.queryPerf(new PerfQuerySpec[] {qSpec}); }
 			catch(Exception ee){}
+			Object statistics;
+			if(type == Config.TYPE_HOST)
+			{
+				statistics = new HostStatistics();
+			}
+			else
+			{
+				statistics =  new VmStatistics();
+			}
 			
 			for (int i=0; pembs != null && i<pembs.length; i++)
 			{
@@ -300,28 +318,54 @@ public class Utilities {
 					PerfMetricIntSeries val1 = (PerfMetricIntSeries) vals[j];
 					System.out.println("Printing counter ID: " + val1.getId().getCounterId());
 					long[] longs = val1.getValue();
-					if (val1.getId().getCounterId() == 125)
-						statistics.setDiskUsageAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 130)
-						statistics.setDiskReadAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 131)
-						statistics.setDiskWriteAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 132)
-						statistics.setDiskTotalLantency((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 143)
-						statistics.setNetUsageAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 180)
-						statistics.setDatastoreReadAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 181)
-						statistics.setDataStoreWriteAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 394)
-						statistics.setNetBytesRxAverage((int) longs[longs.length-1]);
-					else if (val1.getId().getCounterId() == 395)
-						statistics.setNetBytesTxAverage((int) longs[longs.length-1]);
-					
-					if(statistics.getName() == null)
-						statistics.setName(vHostName);
-					statistics.setTimeStamp(new Date());
+					if(type == Config.TYPE_HOST)
+					{
+						if (val1.getId().getCounterId() == 125)
+							((HostStatistics) statistics).setDiskUsageAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 130)
+							((HostStatistics) statistics).setDiskReadAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 131)
+							((HostStatistics) statistics).setDiskWriteAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 132)
+							((HostStatistics) statistics).setDiskTotalLantency((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 143)
+							((HostStatistics) statistics).setNetUsageAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 180)
+							((HostStatistics) statistics).setDatastoreReadAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 181)
+							((HostStatistics) statistics).setDataStoreWriteAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 394)
+							((HostStatistics) statistics).setNetBytesRxAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 395)
+							((HostStatistics) statistics).setNetBytesTxAverage((int) longs[longs.length-1]);
+						if(((HostStatistics) statistics).getName() == null)
+							((HostStatistics) statistics).setName(entityName);
+						((HostStatistics) statistics).setTimeStamp(new Date());
+					}
+					else
+					{
+						if (val1.getId().getCounterId() == 125)
+							((VmStatistics) statistics).setDiskUsageAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 130)
+							((VmStatistics) statistics).setDiskReadAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 131)
+							((VmStatistics) statistics).setDiskWriteAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 132)
+							((VmStatistics) statistics).setDiskTotalLantency((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 143)
+							((VmStatistics) statistics).setNetUsageAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 180)
+							((VmStatistics) statistics).setDatastoreReadAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 181)
+							((VmStatistics) statistics).setDataStoreWriteAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 394)
+							((VmStatistics) statistics).setNetBytesRxAverage((int) longs[longs.length-1]);
+						else if (val1.getId().getCounterId() == 395)
+							((VmStatistics) statistics).setNetBytesTxAverage((int) longs[longs.length-1]);
+						if(((VmStatistics) statistics).getName() == null)
+							((VmStatistics) statistics).setName(entityName);
+						((VmStatistics) statistics).setTimeStamp(new Date());
+					}
 					
 					System.out.println("CounterID: " + val1.getId().getCounterId()
 							+ " Timestamp: " + infos[longs.length-1].getTimestamp().getTime()

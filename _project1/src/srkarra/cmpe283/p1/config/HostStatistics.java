@@ -20,8 +20,76 @@ public class HostStatistics {
 	private Integer dataStoreWriteAverage = 0;
 	private Integer netBytesRxAverage = 0;
 	private Integer netBytesTxAverage = 0;
+	private Integer diskUsageAverage = 0;
+	private Integer cpuUsage = 0;
+	private Integer memUsage = 0;
+	private Integer cpuFairness = 0;
+	private Integer memFairness = 0;
+	private long 	cpuHz = 0;
 	private Date 	timeStamp = null;
 	
+	/**
+	 * @return the cpuHz
+	 */
+	public long getCpuHz() {
+		return cpuHz;
+	}
+	/**
+	 * @param cpuHz the cpuHz to set
+	 */
+	public void setCpuHz(long cpuHz) {
+		this.cpuHz = cpuHz;
+	}
+	
+	/**
+	 * @return the cpuUsage
+	 */
+	public Integer getCpuUsage() {
+		return cpuUsage;
+	}
+	/**
+	 * @param cpuUsage the cpuUsage to set
+	 */
+	public void setCpuUsage(Integer cpuUsage) {
+		this.cpuUsage = cpuUsage;
+	}
+	/**
+	 * @return the memUsage
+	 */
+	public Integer getMemUsage() {
+		return memUsage;
+	}
+	/**
+	 * @param memUsage the memUsage to set
+	 */
+	public void setMemUsage(Integer memUsage) {
+		this.memUsage = memUsage;
+	}
+	/**
+	 * @return the cpuFairness
+	 */
+	public Integer getCpuFairness() {
+		return cpuFairness;
+	}
+	/**
+	 * @param cpuFairness the cpuFairness to set
+	 */
+	public void setCpuFairness(Integer cpuFairness) {
+		this.cpuFairness = cpuFairness;
+	}
+	/**
+	 * @return the memFairness
+	 */
+	public Integer getMemFairness() {
+		return memFairness;
+	}
+	/**
+	 * @param memFairness the memFairness to set
+	 */
+	public void setMemFairness(Integer memFairness) {
+		this.memFairness = memFairness;
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -35,7 +103,6 @@ public class HostStatistics {
 		this.name = name;
 	}
 	
-	private Integer diskUsageAverage = 0;
 	/**
 	 * @return the diskUsageAverage
 	 */

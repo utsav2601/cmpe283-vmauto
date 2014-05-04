@@ -22,8 +22,129 @@ public class VmStatistics {
 	private String  powerState = "";
 	private String  systemUpTime = "";
 	private String  storageUsed = "";
+	private Integer diskWriteAverage = 0;
+	private Integer diskTotalLantency = 0;
+	private Integer netUsageAverage = 0;
+	private Integer datastoreReadAverage = 0;
+	private Integer dataStoreWriteAverage = 0;
+	private Integer netBytesRxAverage = 0;
+	private Integer netBytesTxAverage = 0;
+	private Integer diskReadAverage = 0;
+	private Integer diskUsageAverage = 0;
 	private Date 	timeStamp = null;
 	
+	/**
+	 * @return the diskReadAverage
+	 */
+	public Integer getDiskReadAverage() {
+		return diskReadAverage;
+	}
+
+	/**
+	 * @param diskReadAverage the diskReadAverage to set
+	 */
+	public void setDiskReadAverage(Integer diskReadAverage) {
+		this.diskReadAverage = diskReadAverage;
+	}
+
+	/**
+	 * @return the diskWriteAverage
+	 */
+	public Integer getDiskWriteAverage() {
+		return diskWriteAverage;
+	}
+
+	/**
+	 * @param diskWriteAverage the diskWriteAverage to set
+	 */
+	public void setDiskWriteAverage(Integer diskWriteAverage) {
+		this.diskWriteAverage = diskWriteAverage;
+	}
+
+	/**
+	 * @return the diskTotalLantency
+	 */
+	public Integer getDiskTotalLantency() {
+		return diskTotalLantency;
+	}
+
+	/**
+	 * @param diskTotalLantency the diskTotalLantency to set
+	 */
+	public void setDiskTotalLantency(Integer diskTotalLantency) {
+		this.diskTotalLantency = diskTotalLantency;
+	}
+
+	/**
+	 * @return the netUsageAverage
+	 */
+	public Integer getNetUsageAverage() {
+		return netUsageAverage;
+	}
+
+	/**
+	 * @param netUsageAverage the netUsageAverage to set
+	 */
+	public void setNetUsageAverage(Integer netUsageAverage) {
+		this.netUsageAverage = netUsageAverage;
+	}
+
+	/**
+	 * @return the datastoreReadAverage
+	 */
+	public Integer getDatastoreReadAverage() {
+		return datastoreReadAverage;
+	}
+
+	/**
+	 * @param datastoreReadAverage the datastoreReadAverage to set
+	 */
+	public void setDatastoreReadAverage(Integer datastoreReadAverage) {
+		this.datastoreReadAverage = datastoreReadAverage;
+	}
+
+	/**
+	 * @return the dataStoreWriteAverage
+	 */
+	public Integer getDataStoreWriteAverage() {
+		return dataStoreWriteAverage;
+	}
+
+	/**
+	 * @param dataStoreWriteAverage the dataStoreWriteAverage to set
+	 */
+	public void setDataStoreWriteAverage(Integer dataStoreWriteAverage) {
+		this.dataStoreWriteAverage = dataStoreWriteAverage;
+	}
+
+	/**
+	 * @return the netBytesRxAverage
+	 */
+	public Integer getNetBytesRxAverage() {
+		return netBytesRxAverage;
+	}
+
+	/**
+	 * @param netBytesRxAverage the netBytesRxAverage to set
+	 */
+	public void setNetBytesRxAverage(Integer netBytesRxAverage) {
+		this.netBytesRxAverage = netBytesRxAverage;
+	}
+
+	/**
+	 * @return the netBytesTxAverage
+	 */
+	public Integer getNetBytesTxAverage() {
+		return netBytesTxAverage;
+	}
+
+	/**
+	 * @param netBytesTxAverage the netBytesTxAverage to set
+	 */
+	public void setNetBytesTxAverage(Integer netBytesTxAverage) {
+		this.netBytesTxAverage = netBytesTxAverage;
+	}
+
 	/**
 	 * @return the timeStamp
 	 */
@@ -111,12 +232,25 @@ public class VmStatistics {
 	public void setGuestFullName(String guestFullName) {
 		this.guestFullName = guestFullName;
 	}
+	
+	/**
+	 * @param diskUsageAverage the diskUsageAverage to set
+	 */
+	public void setDiskUsageAverage(Integer diskUsageAverage) {
+		this.diskUsageAverage = diskUsageAverage;
+	}
+	/**
+	 * @return the diskReadAverage
+	 */
+	public Integer getDiskUsageAverage() {
+		return diskUsageAverage;
+	}
 
-	public String getVmName() {
+	public String getName() {
 		return vmName;
 	}
 
-	public void setVmName(String vmName) {
+	public void setName(String vmName) {
 		this.vmName = vmName;
 	}
 

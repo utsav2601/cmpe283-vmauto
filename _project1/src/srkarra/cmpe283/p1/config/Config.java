@@ -57,6 +57,9 @@ public class Config {
 	public static final String 	REST_API_POST_VM_LOG		= "http://cmpe283.srkarra.com/stats/log";
 	public static final int 	REST_API_RESPONSE_SUCCESS 	= 200;
 	
+	public static final int 	TYPE_HOST 			= 1;
+	public static final int 	TYPE_VIRTUALMACHINE = 2;
+	
 	private static Config config;
 	private Properties properties;
 	private static List<ServiceInstance> serviceInstances;
