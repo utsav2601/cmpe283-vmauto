@@ -19,7 +19,7 @@ import edu.sjsu.cmpe283.services.LogDataService;
 
 
 @RestController
-@RequestMapping("/stats/log")
+@RequestMapping("/v2/stats/log")
 public class LogDataWebService {
     private static Log logger = LogFactory.getLog(LogDataWebService.class);
     

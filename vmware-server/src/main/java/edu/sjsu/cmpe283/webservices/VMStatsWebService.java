@@ -18,7 +18,7 @@ import edu.sjsu.cmpe283.entities.VMStats;
 import edu.sjsu.cmpe283.services.VMStatsService;
 
 @RestController
-@RequestMapping("/stats/vm")
+@RequestMapping("/v2/stats/vm")
 public class VMStatsWebService {
     private static Log logger = LogFactory.getLog(VMStatsWebService.class);
     

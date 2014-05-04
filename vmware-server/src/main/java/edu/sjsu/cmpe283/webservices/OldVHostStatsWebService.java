@@ -18,7 +18,7 @@ import edu.sjsu.cmpe283.entities.OldVHostStats;
 import edu.sjsu.cmpe283.services.OldVHostStatsService;
 
 @RestController
-@RequestMapping("/stats/vhost/v1")
+@RequestMapping("/v1/stats/vhost")
 public class OldVHostStatsWebService {
     private static Log logger = LogFactory.getLog(OldVHostStatsWebService.class);
     
