@@ -6,28 +6,53 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class VHostStats {
+public class OldVHostStats {
     
     @Id
     private String id;
     
-    private String  name;
+    private String name;
     private Integer diskReadAverage;
     private Integer diskWriteAverage;
     private Integer diskTotalLantency;
     private Integer netUsageAverage;
     private Integer datastoreReadAverage;
     private Integer dataStoreWriteAverage;
+    private Integer diskUsageAverage;
     private Integer netBytesRxAverage;
     private Integer netBytesTxAverage;
-    private Integer diskUsageAverage;
-    private Date    timeStamp;
-    private Integer cpuUsage;
-    private Integer memUsage;
-    private Integer cpuFairness;
-    private Integer memFairness;
-    private Long    cpuHz;
+    private Date timeStamp;
     
+    public OldVHostStats() {
+        
+    }
+    
+    public OldVHostStats(String id, String name, Integer diskReadAverage, Integer diskWriteAverage, Integer diskTotalLantency, Integer netUsageAverage, Integer datastoreReadAverage, Integer dataStoreWriteAverage, Integer diskUsageAverage,
+            Integer netBytesRxAverage, Integer netBytesTxAverage, Date timeStamp) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.diskReadAverage = diskReadAverage;
+        this.diskWriteAverage = diskWriteAverage;
+        this.diskTotalLantency = diskTotalLantency;
+        this.netUsageAverage = netUsageAverage;
+        this.datastoreReadAverage = datastoreReadAverage;
+        this.dataStoreWriteAverage = dataStoreWriteAverage;
+        this.diskUsageAverage = diskUsageAverage;
+        this.netBytesRxAverage = netBytesRxAverage;
+        this.netBytesTxAverage = netBytesTxAverage;
+        this.timeStamp = timeStamp;
+    }
+
+
+    public Integer getDiskUsageAverage() {
+        return diskUsageAverage;
+    }
+
+    public void setDiskUsageAverage(Integer diskUsageAverage) {
+        this.diskUsageAverage = diskUsageAverage;
+    }
+
     public String getId() {
         return id;
     }
@@ -108,60 +133,12 @@ public class VHostStats {
         this.netBytesTxAverage = netBytesTxAverage;
     }
     
-    public Integer getDiskUsageAverage() {
-        return diskUsageAverage;
-    }
-    
-    public void setDiskUsageAverage(Integer diskUsageAverage) {
-        this.diskUsageAverage = diskUsageAverage;
-    }
-    
     public Date getTimeStamp() {
         return timeStamp;
     }
     
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
-    }
-    
-    public Integer getCpuUsage() {
-        return cpuUsage;
-    }
-    
-    public void setCpuUsage(Integer cpuUsage) {
-        this.cpuUsage = cpuUsage;
-    }
-    
-    public Integer getMemUsage() {
-        return memUsage;
-    }
-    
-    public void setMemUsage(Integer memUsage) {
-        this.memUsage = memUsage;
-    }
-    
-    public Integer getCpuFairness() {
-        return cpuFairness;
-    }
-    
-    public void setCpuFairness(Integer cpuFairness) {
-        this.cpuFairness = cpuFairness;
-    }
-    
-    public Integer getMemFairness() {
-        return memFairness;
-    }
-    
-    public void setMemFairness(Integer memFairness) {
-        this.memFairness = memFairness;
-    }
-    
-    public Long getCpuHz() {
-        return cpuHz;
-    }
-
-    public void setCpuHz(Long cpuHz) {
-        this.cpuHz = cpuHz;
     }
     
 }
