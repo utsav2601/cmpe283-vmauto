@@ -31,4 +31,8 @@ public class OldLogDataService {
         }
         return list.toArray(new String[list.size()]);
     }
+    
+    public List<OldLogData> getLogs(String vmName, String fileName) {
+		return logRepo.findByVmNameAndFileName(vmName, fileName);
+	}
 }
