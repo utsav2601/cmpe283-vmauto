@@ -163,5 +163,12 @@ public class VHostStats {
     public void setCpuHz(Long cpuHz) {
         this.cpuHz = cpuHz;
     }
+
+    @Override
+    public String toString() {
+        return "VHostStats [id=" + id + ", name=" + name + ", diskReadAverage=" + diskReadAverage + ", diskWriteAverage=" + diskWriteAverage + ", diskTotalLantency=" + diskTotalLantency + ", netUsageAverage=" + netUsageAverage
+                + ", datastoreReadAverage=" + datastoreReadAverage + ", dataStoreWriteAverage=" + dataStoreWriteAverage + ", netBytesRxAverage=" + netBytesRxAverage + ", netBytesTxAverage=" + netBytesTxAverage + ", diskUsageAverage="
+                + diskUsageAverage + ", timeStamp=" + timeStamp + ", cpuUsage=" + cpuUsage + ", memUsage=" + memUsage + ", cpuFairness=" + cpuFairness + ", memFairness=" + memFairness + ", cpuHz=" + cpuHz + "]";
+    }
     
 }

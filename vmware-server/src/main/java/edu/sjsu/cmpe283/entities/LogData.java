@@ -69,5 +69,9 @@ public class LogData {
     public void setFileContent(String fileContent) {
         this.fileContent = fileContent;
     }
-    
+
+    @Override
+    public String toString() {
+        return "LogData [id=" + id + ", timeStamp=" + timeStamp + ", vmName=" + vmName + ", fileName=" + fileName + ", fileContent=" + fileContent + "]";
+    }
 }

@@ -19,7 +19,7 @@ import edu.sjsu.cmpe283.services.OldLogDataService;
 
 
 @RestController
-@RequestMapping("/stats/log/v1")
+@RequestMapping("/v1/stats/log")
 public class OldLogDataWebService {
     private static Log logger = LogFactory.getLog(OldLogDataWebService.class);
     
@@ -31,6 +31,7 @@ public class OldLogDataWebService {
     public ResponseEntity getData() {
         
         try {
+            logger.info("Get All Old Log Statistics");
             List<OldLogData> stats = logDataService.getAllStats();
             return new ResponseEntity<List<OldLogData>>(stats, HttpStatus.OK);
         }
@@ -46,6 +47,7 @@ public class OldLogDataWebService {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewLogData(@RequestBody(required = true) @Valid OldLogData logdata) {
         try {
+            logger.info("New old stat data: " + logdata);
             return new ResponseEntity<OldLogData>(logDataService.saveLogData(logdata), HttpStatus.OK);
         }
         catch (Exception e) {
