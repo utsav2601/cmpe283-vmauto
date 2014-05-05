@@ -42,6 +42,20 @@ public class VHostStatsWebService {
     }
     
     @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/unique", method = RequestMethod.GET)
+    public ResponseEntity getUniqueVHost() {
+        try {
+            logger.info("Get All Unique VHost Names");
+            return new ResponseEntity<String[]>(vHostStatsService.getUniqueList(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+            logger.info(e);
+            return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVHostStats(@RequestBody(required = true) @Valid VHostStats vhoststats) {
         try {
