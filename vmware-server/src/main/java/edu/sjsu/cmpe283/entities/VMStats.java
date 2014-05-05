@@ -30,6 +30,8 @@ public class VMStats {
     private Integer netBytesTxAverage;
     private Integer diskReadAverage;
     private Integer diskUsageAverage;
+    private Integer threadCount;
+    private Integer processCount;
     private Date    timeStamp;
     
     public String getId() {
@@ -40,11 +42,11 @@ public class VMStats {
         this.id = id;
     }
     
-    public boolean isSupportsSnapShot() {
+    public Boolean getSupportsSnapShot() {
         return supportsSnapShot;
     }
     
-    public void setSupportsSnapShot(boolean supportsSnapShot) {
+    public void setSupportsSnapShot(Boolean supportsSnapShot) {
         this.supportsSnapShot = supportsSnapShot;
     }
     
@@ -199,12 +201,29 @@ public class VMStats {
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
+    
+    public Integer getThreadCount() {
+        return threadCount;
+    }
+    
+    public void setThreadCount(Integer threadCount) {
+        this.threadCount = threadCount;
+    }
+    
+    public Integer getProcessCount() {
+        return processCount;
+    }
+    
+    public void setProcessCount(Integer processCount) {
+        this.processCount = processCount;
+    }
 
     @Override
     public String toString() {
         return "VMStats [id=" + id + ", supportsSnapShot=" + supportsSnapShot + ", cpuUsage=" + cpuUsage + ", guestMemoryUsage=" + guestMemoryUsage + ", maxHostMemory=" + maxHostMemory + ", vmName=" + vmName + ", guestFullName="
                 + guestFullName + ", guestIpAddress=" + guestIpAddress + ", powerState=" + powerState + ", systemUpTime=" + systemUpTime + ", storageUsed=" + storageUsed + ", diskWriteAverage=" + diskWriteAverage + ", diskTotalLantency="
                 + diskTotalLantency + ", netUsageAverage=" + netUsageAverage + ", datastoreReadAverage=" + datastoreReadAverage + ", dataStoreWriteAverage=" + dataStoreWriteAverage + ", netBytesRxAverage=" + netBytesRxAverage
-                + ", netBytesTxAverage=" + netBytesTxAverage + ", diskReadAverage=" + diskReadAverage + ", diskUsageAverage=" + diskUsageAverage + ", timeStamp=" + timeStamp + "]";
+                + ", netBytesTxAverage=" + netBytesTxAverage + ", diskReadAverage=" + diskReadAverage + ", diskUsageAverage=" + diskUsageAverage + ", threadCount=" + threadCount + ", processCount=" + processCount + ", timeStamp="
+                + timeStamp + "]";
     }
 }
