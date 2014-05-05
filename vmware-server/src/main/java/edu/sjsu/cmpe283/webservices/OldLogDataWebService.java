@@ -43,6 +43,23 @@ public class OldLogDataWebService {
     }
     
     @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/single", method = RequestMethod.GET)
+    public ResponseEntity getSingleLogData(
+            @RequestParam(value = "vmname", defaultValue = "t04_vm01_ubuntu32", required = false) String vmName,
+            @RequestParam(value = "filename", defaultValue = "vmstat", required = false) String fileName
+            ) {
+        try {
+            logger.info("Get All Log Files for: " + vmName + ", filename" + fileName);
+            return new ResponseEntity<List<OldLogData>>(logDataService.getLogs(vmName, fileName), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+            logger.info(e);
+            return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/unique", method = RequestMethod.GET)
     public ResponseEntity getUniqueLogData() {
         try {
