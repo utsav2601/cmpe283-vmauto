@@ -7,6 +7,9 @@ body {
 .padder {
   min-height: 50px !important;
 }
+.gcharts {
+  min-height: 400px !important;
+}
 .jumbotron {
   text-align: left;
 }

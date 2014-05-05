@@ -10,7 +10,7 @@ $(function() {
   });
 
   $( "#viewVHosts" ).click(function() {
-    setNavActive($(this), "html/vhost.html");
+    setNavActive($(this), "html/vhost.html", loadVHostStats);
   });
 
   $( "#viewLogs" ).click(function() {
@@ -164,18 +164,18 @@ function showVMStats(text) {
 
 
 
-    var cpuChartOptions = { title: 'CPU Usage MHz', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var memoryChartOptions = { title: 'Memory Usage', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var storageChartOptions = { title: 'Stroage Usage', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var diskUsageChartOptions = { title: 'Disk Usage Usage', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var diskReadChartOptions = { title: 'Disk Average Read', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var diskWriteChartOptions = { title: 'Disk Average Write', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var diskLatencyChartOptions = { title: 'Disk Total Latency', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var netUsageChartOptions = { title: 'Net Usage Statistics', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var netBytesRxChartOptions = { title: 'Net Bytes Recieved', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var netBytesTxChartOptions = { title: 'Net Bytes Transmitted', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var processChartOptions = { title: 'VM\'s Process Count', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
-    var threadChartOptions = { title: 'VM\'s Thread Count', curveType: 'function', legend: {position: 'none'}, interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var cpuChartOptions = { title: 'CPU Usage MHz', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var memoryChartOptions = { title: 'Memory Usage MB', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var storageChartOptions = { title: 'Stroage Usage MB', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var diskUsageChartOptions = { title: 'Disk Usage Usage MB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var diskReadChartOptions = { title: 'Disk Average Read MB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var diskWriteChartOptions = { title: 'Disk Average Write MB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var diskLatencyChartOptions = { title: 'Disk Total Latency MB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var netUsageChartOptions = { title: 'Net Usage Statistics KB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var netBytesRxChartOptions = { title: 'Net Bytes Recieved KB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var netBytesTxChartOptions = { title: 'Net Bytes Transmitted KB/s', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var processChartOptions = { title: 'VM\'s Process Count', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
+    var threadChartOptions = { title: 'VM\'s Thread Count', curveType: 'function', interpolateNulls: true, explorer: { actions: ['rightClickToReset'], maxZoomOut: 2, keepInBounds: true } };
 
 
     var cpuUsageChart = new google.visualization.LineChart(document.getElementById('cpuChart'));
@@ -205,6 +205,38 @@ function showVMStats(text) {
     processChart.draw(processChartData, processChartOptions);
     threadChart.draw(threadChartData, threadChartOptions);
 
+
+    closeAllText();
+  }});
+}
+
+
+
+
+function loadVHostStats() {
+  showDataLoading();
+  $.ajax({
+    type: "get",
+    url : "/v2/stats/vm",
+    success : showVHostStats,
+    error : showGenericError
+  });
+}
+
+
+function showVHostStats(text) {
+    // Get list of unique vm
+  var uniqueVHosts = jQuery.parseJSON($.ajax({
+    async: false,
+    cache: true,
+    url : "/v2/stats/vhost/unique",
+  }).responseText)
+
+  console.log(uniqueVHosts);
+  console.log(text);
+
+
+  google.load("visualization", "1", { packages:["corechart"], callback: function() {
 
     closeAllText();
   }});

@@ -40,6 +40,21 @@ public class OldVMStatsWebService {
         }
     }
     
+    @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/unique", method = RequestMethod.GET)
+    public ResponseEntity getUniqueVm() {
+        try {
+            logger.info("Get All Unique VM Names");
+            return new ResponseEntity<String[]>(vmStatsService.getUniqueList(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+            logger.info(e);
+            return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
     
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
