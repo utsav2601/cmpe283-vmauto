@@ -30,6 +30,7 @@ public class VMStatsWebService {
     public ResponseEntity getData() {
         
         try {
+            logger.info("Get All VM Statistics");
             List<VMStats> stats = vmStatsService.getAllStats();
             return new ResponseEntity<List<VMStats>>(stats, HttpStatus.OK);
         }
@@ -45,6 +46,7 @@ public class VMStatsWebService {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVMStats(@RequestBody(required = true) @Valid VMStats vmstats) {
         try {
+            logger.info("New vm stat data: " + vmstats);
             return new ResponseEntity<VMStats>(vmStatsService.saveStats(vmstats), HttpStatus.OK);
         }
         catch (Exception e) {

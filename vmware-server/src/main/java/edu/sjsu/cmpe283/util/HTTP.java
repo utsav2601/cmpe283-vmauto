@@ -14,7 +14,7 @@ import org.apache.http.util.EntityUtils;
 
 public class HTTP {
     
-    public static String HTTPGet(String url) throws IOException {
+    public static String GET(String url) throws IOException {
         // Send GET Request
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet get = new HttpGet(url);

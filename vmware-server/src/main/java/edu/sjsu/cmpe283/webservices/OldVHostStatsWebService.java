@@ -30,6 +30,7 @@ public class OldVHostStatsWebService {
     public ResponseEntity getData() {
         
         try {
+            logger.info("Get All Old VHost Statistics");
             List<OldVHostStats> stats = vHostStatsService.getAllStats();
             return new ResponseEntity<List<OldVHostStats>>(stats, HttpStatus.OK);
         }
@@ -44,6 +45,7 @@ public class OldVHostStatsWebService {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVHostStats(@RequestBody(required = true) @Valid OldVHostStats vhoststats) {
         try {
+            logger.info("New old vhost stat data: " + vhoststats);
             return new ResponseEntity<OldVHostStats>(vHostStatsService.saveStats(vhoststats), HttpStatus.OK);
         }
         catch (Exception e) {

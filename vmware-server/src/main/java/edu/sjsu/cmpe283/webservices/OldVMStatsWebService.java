@@ -28,8 +28,8 @@ public class OldVMStatsWebService {
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getData() {
-        
         try {
+            logger.info("Get All Old VM Statistics");
             List<OldVMStats> stats = vmStatsService.getAllStats();
             return new ResponseEntity<List<OldVMStats>>(stats, HttpStatus.OK);
         }
@@ -45,6 +45,7 @@ public class OldVMStatsWebService {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity postNewVMStats(@RequestBody(required = true) @Valid OldVMStats vmstats) {
         try {
+            logger.info("New old vm stat data: " + vmstats);
             return new ResponseEntity<OldVMStats>(vmStatsService.saveStats(vmstats), HttpStatus.OK);
         }
         catch (Exception e) {

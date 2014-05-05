@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CMPE 283: VMware Charting</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Language" content="English">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="/css/prime.css">
+	<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script ="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<!-- <script type="text/javascript" src="https://www.google.com/jsapi"></script> -->
+	<script src="/js/holder.js"></script>
+	<script src="/js/prime.js"></script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+			<a class="navbar-brand" href="/">CMPE 283: VMware Charting <span class="text-warning">(BETA)</span></a>
+			</div>
+			<!--
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown">Options<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header">Demo</li>
+						<li><a href="/main.html">Restart Charting</a></li>
+						<li class="divider"></li>
+						<li class="dropdown-header">Navigation</li>
+						<li><a href="/">Home</a></li>
+						<li><a href="/main.html">Charting</a></li>
+						<li><a href="/about.html">About</a></li>
+						<li class="divider"></li>
+					</ul>
+				</li>
+			</ul>
+			-->
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar" id="navs">
+					<li class="active"><a id="overview" >Overview</a></li>
+					<li><a id="viewVHosts">View Virtual Hosts</a></li>
+					<li><a id="viewVMs">View Virtual Machine</a></li>
+					<li><a id="viewLogs">View Logs</a></li>
+				</ul>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<span id="contentPage"></span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

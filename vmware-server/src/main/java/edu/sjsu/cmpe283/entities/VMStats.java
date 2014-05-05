@@ -11,7 +11,7 @@ public class VMStats {
     @Id
     private String id;
     
-    private boolean supportsSnapShot;
+    private Boolean supportsSnapShot;
     private Integer cpuUsage;
     private Integer guestMemoryUsage;
     private Integer maxHostMemory;
@@ -198,5 +198,13 @@ public class VMStats {
     
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "VMStats [id=" + id + ", supportsSnapShot=" + supportsSnapShot + ", cpuUsage=" + cpuUsage + ", guestMemoryUsage=" + guestMemoryUsage + ", maxHostMemory=" + maxHostMemory + ", vmName=" + vmName + ", guestFullName="
+                + guestFullName + ", guestIpAddress=" + guestIpAddress + ", powerState=" + powerState + ", systemUpTime=" + systemUpTime + ", storageUsed=" + storageUsed + ", diskWriteAverage=" + diskWriteAverage + ", diskTotalLantency="
+                + diskTotalLantency + ", netUsageAverage=" + netUsageAverage + ", datastoreReadAverage=" + datastoreReadAverage + ", dataStoreWriteAverage=" + dataStoreWriteAverage + ", netBytesRxAverage=" + netBytesRxAverage
+                + ", netBytesTxAverage=" + netBytesTxAverage + ", diskReadAverage=" + diskReadAverage + ", diskUsageAverage=" + diskUsageAverage + ", timeStamp=" + timeStamp + "]";
     }
 }
