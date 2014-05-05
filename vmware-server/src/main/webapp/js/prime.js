@@ -500,7 +500,7 @@ function showLogData(text) {
   if(text.length > 0) {
     var logTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
     $.each(text, function(index, value) {
-      logTable += '<tr><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
+      logTable += '<tr><td>'+ index +'</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
     });
     
     logTable += '</tbody></table></div>';
