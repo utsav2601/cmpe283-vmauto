@@ -60,13 +60,36 @@ function loadVMStats() {
   });
 }
 
+
 function vmLastState(text) {
   console.log(text);
   if(text.length > 0) {
     var lastState = "";
-    $.each(uniqueVMs, function(index, value) {
-      var lastStateTable = '<h3 class="sub-header">Last Known State for ' + value.vmName + '</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Key</th><th>Value</th></tr></thead><tbody>';
-      lastStateTable += '<tr><td>'+ (index+1) + '</td><td>Time Stamp</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td></tr>';
+    $.each(text, function(index, value) {
+      var lastStateTable = '<h3 class="sub-header">Last Known State for ' + value.vmName + '</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
+      lastStateTable += '<tr><td>Time Stamp</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td></tr>';
+      lastStateTable += '<tr><td>Full Name</td><td>'+ value.guestFullName +'</td></tr>';
+      lastStateTable += '<tr><td>IP Address</td><td>'+ value.guestIpAddress +'</td></tr>';
+      lastStateTable += '<tr><td>System Uptime</td><td>'+ value.systemUpTime +'</td></tr>';
+      lastStateTable += '<tr><td>System Power State</td><td>'+ value.powerState +'</td></tr>';
+      lastStateTable += '<tr><td>Snap Shots</td><td>'+ value.supportsSnapShot +'</td></tr>';
+      lastStateTable += '<tr><td>CPU Usage</td><td>'+ value.cpuUsage +'</td></tr>';
+      lastStateTable += '<tr><td>Memory Usage</td><td>'+ value.guestMemoryUsage +'</td></tr>';
+      lastStateTable += '<tr><td>Memory Allocated</td><td>'+ value.maxHostMemory +'</td></tr>';
+      lastStateTable += '<tr><td>Storage Used</td><td>'+ value.storageUsed +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Read Average</td><td>'+ value.diskReadAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Write Average</td><td>'+ value.diskWriteAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Usage Average</td><td>'+ value.diskUsageAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Total Latency</td><td>'+ value.diskTotalLantency +'</td></tr>';
+      lastStateTable += '<tr><td>Net Usage Average</td><td>'+ value.netUsageAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Net Bytes Recieved</td><td>'+ value.netBytesRxAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Net Bytes Transmitted</td><td>'+ value.netBytesTxAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Datastore Read Average</td><td>'+ value.datastoreReadAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Datastore Write Average</td><td>'+ value.dataStoreWriteAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Process Count</td><td>'+ value.processCount +'</td></tr>';
+      lastStateTable += '<tr><td>Thread Count</td><td>'+ value.threadCount +'</td></tr>';
+
+
       lastStateTable += '</tbody></table></div>';
       lastState += lastStateTable;
     });
@@ -267,17 +290,35 @@ function loadVHostStats() {
   });
 }
 
+
 function vHostLastState(text) {
   console.log(text);
   if(text.length > 0) {
-    // var vendorTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
-    // $.each(text, function(index, value) {
-    //   vendorTable += '<tr><td>'+ (index+1) + '</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
-    // });
-    
-    // vendorTable += '</tbody></table></div>';
-    // $("#fileData").html(vendorTable);
-    
+    var lastState = "";
+    $.each(text, function(index, value) {
+      var lastStateTable = '<h3 class="sub-header">Last Known State for ' + value.name + '</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
+      lastStateTable += '<tr><td>Time Stamp</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td></tr>';
+      lastStateTable += '<tr><td>IP Address</td><td>'+ value.name +'</td></tr>';
+      lastStateTable += '<tr><td>CPU Fairness</td><td>'+ value.cpuFairness +'</td></tr>';
+      lastStateTable += '<tr><td>Memory Fairness</td><td>'+ value.memFairness +'</td></tr>';
+      lastStateTable += '<tr><td>CPU Usage</td><td>'+ value.cpuUsage +'</td></tr>';
+      lastStateTable += '<tr><td>CPU Freq</td><td>'+ value.cpuHz +'</td></tr>';
+      lastStateTable += '<tr><td>Memory Usage</td><td>'+ value.memUsage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Read Average</td><td>'+ value.diskReadAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Write Average</td><td>'+ value.diskWriteAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Usage Average</td><td>'+ value.diskUsageAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Disk Total Latency</td><td>'+ value.diskTotalLantency +'</td></tr>';
+      lastStateTable += '<tr><td>Net Usage Average</td><td>'+ value.netUsageAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Net Bytes Recieved</td><td>'+ value.netBytesRxAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Net Bytes Transmitted</td><td>'+ value.netBytesTxAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Datastore Read Average</td><td>'+ value.datastoreReadAverage +'</td></tr>';
+      lastStateTable += '<tr><td>Datastore Write Average</td><td>'+ value.dataStoreWriteAverage +'</td></tr>';
+
+      lastStateTable += '</tbody></table></div>';
+      lastState += lastStateTable;
+    });
+    $("#lastKnownState").html(lastState);
+
     $.ajax({
       type : "get",
       cache: false,
@@ -459,7 +500,7 @@ function showLogData(text) {
   if(text.length > 0) {
     var logTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
     $.each(text, function(index, value) {
-      logTable += '<tr><td>'+ (index+1) + '</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
+      logTable += '<tr><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
     });
     
     logTable += '</tbody></table></div>';
