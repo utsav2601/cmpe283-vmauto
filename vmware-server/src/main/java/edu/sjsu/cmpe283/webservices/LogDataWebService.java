@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.sjsu.cmpe283.entities.LogData;
@@ -41,6 +42,24 @@ public class LogDataWebService {
             return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/single", method = RequestMethod.GET)
+    public ResponseEntity getSingleLogData(
+            @RequestParam(value = "vmname", defaultValue = "t04_vm01_ubuntu32", required = false) String vmName,
+            @RequestParam(value = "filename", defaultValue = "vmstat", required = false) String fileName
+            ) {
+        try {
+            logger.info("Get All Log Files for: " + vmName + ", filename" + fileName);
+            return new ResponseEntity<List<LogData>>(logDataService.getLogs(vmName, fileName), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+            logger.info(e);
+            return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     
     @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/unique", method = RequestMethod.GET)

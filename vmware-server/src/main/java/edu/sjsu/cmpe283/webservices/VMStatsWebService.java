@@ -42,6 +42,20 @@ public class VMStatsWebService {
     }
     
     @SuppressWarnings("rawtypes")
+    @RequestMapping(value = "/laststate", method = RequestMethod.GET)
+    public ResponseEntity getLastKnownState() {
+        try {
+            logger.info("Get Last known state vms");
+            return new ResponseEntity<List<VMStats>>(vmStatsService.getLastKnownState(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.info("Error: " + e.getMessage());
+            logger.info(e);
+            return new ResponseEntity<String>(String.format("{\"err\":\"%s\"}",e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @SuppressWarnings("rawtypes")
     @RequestMapping(value = "/unique", method = RequestMethod.GET)
     public ResponseEntity getUniqueVm() {
         try {
