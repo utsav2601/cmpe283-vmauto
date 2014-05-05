@@ -225,7 +225,6 @@ public class HostStatistics {
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -238,7 +237,12 @@ public class HostStatistics {
 				+ ", datastoreReadAverage=" + datastoreReadAverage
 				+ ", dataStoreWriteAverage=" + dataStoreWriteAverage
 				+ ", netBytesRxAverage=" + netBytesRxAverage
-				+ ", netBytesTxAverage=" + netBytesTxAverage + ", timeStamp="
-				+ timeStamp + ", diskUsageAverage=" + diskUsageAverage + "]";
+				+ ", netBytesTxAverage=" + netBytesTxAverage
+				+ ", diskUsageAverage=" + diskUsageAverage + ", cpuUsage="
+				+ cpuUsage + ", memUsage=" + memUsage + ", cpuFairness="
+				+ cpuFairness + ", memFairness=" + memFairness + ", cpuHz="
+				+ cpuHz + ", timeStamp=" + timeStamp + "]";
 	}
+	
+	
 }
