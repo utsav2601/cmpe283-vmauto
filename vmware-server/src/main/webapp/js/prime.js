@@ -52,12 +52,37 @@ function closeAllText() {
 function loadVMStats() {
   showDataLoading();
   $.ajax({
-    type: "get",
+    type : "get",
     cache: false,
-    url : "/v2/stats/vm",
-    success : showVMStats,
+    url : "/v2/stats/vm/laststate",
+    success : vmLastState,
     error : showGenericError
   });
+}
+
+function vmLastState(text) {
+  console.log(text);
+  if(text.length > 0) {
+    var lastState = "";
+    $.each(uniqueVMs, function(index, value) {
+      var lastStateTable = '<h3 class="sub-header">Last Known State for ' + value.vmName + '</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Key</th><th>Value</th></tr></thead><tbody>';
+      lastStateTable += '<tr><td>'+ (index+1) + '</td><td>Time Stamp</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td></tr>';
+      lastStateTable += '</tbody></table></div>';
+      lastState += lastStateTable;
+    });
+    $("#lastKnownState").html(lastState);
+    
+    $.ajax({
+      type: "get",
+      cache: false,
+      url : "/v2/stats/vm",
+      success : showVMStats,
+      error : showGenericError
+    });
+  }
+  else {
+    showGenericError();
+  }
 }
 
 
@@ -82,7 +107,7 @@ function showVMStats(text) {
     var diskWriteChartData    = new google.visualization.DataTable();
     var diskLatencyChartData  = new google.visualization.DataTable();
     var dsReadAvgChartData    = new google.visualization.DataTable();
-    var dsWriteAvgChartData  = new google.visualization.DataTable();
+    var dsWriteAvgChartData   = new google.visualization.DataTable();
     var netUsageChartData     = new google.visualization.DataTable();
     var netBytesRxChartData   = new google.visualization.DataTable();
     var netBytesTxChartData   = new google.visualization.DataTable();
@@ -236,10 +261,34 @@ function loadVHostStats() {
   $.ajax({
     type : "get",
     cache: false,
-    url : "/v2/stats/vhost",
-    success : showVHostStats,
+    url : "/v2/stats/vhost/laststate",
+    success : vHostLastState,
     error : showGenericError
   });
+}
+
+function vHostLastState(text) {
+  console.log(text);
+  if(text.length > 0) {
+    // var vendorTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
+    // $.each(text, function(index, value) {
+    //   vendorTable += '<tr><td>'+ (index+1) + '</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
+    // });
+    
+    // vendorTable += '</tbody></table></div>';
+    // $("#fileData").html(vendorTable);
+    
+    $.ajax({
+      type : "get",
+      cache: false,
+      url : "/v2/stats/vhost",
+      success : showVHostStats,
+      error : showGenericError
+    });
+  }
+  else {
+    showGenericError();
+  }
 }
 
 
@@ -408,13 +457,13 @@ function retrieveLogFile() {
 function showLogData(text) {
   console.log(text);
   if(text.length > 0) {
-    var vendorTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
+    var logTable = '<h3 class="sub-header">Log Files for "' +  text[0].vmName  + '", Files: "' + text[0].fileName + '"</h3><div class="table-responsive"><table class="table table-hover table-striped"><thead><tr><th>#</th><th>Time</th><th>File Content</th></tr></thead><tbody>';
     $.each(text, function(index, value) {
-      vendorTable += '<tr><td>'+ (index+1) + '</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
+      logTable += '<tr><td>'+ (index+1) + '</td><td>'+ new Date(value.timeStamp).toLocaleString() +'</td><td>'+value.fileContent+'</td></tr>';
     });
     
-    vendorTable += '</tbody></table></div>';
-    $("#fileData").html(vendorTable);
+    logTable += '</tbody></table></div>';
+    $("#fileData").html(logTable);
     closeAllText();
   }
   else {
