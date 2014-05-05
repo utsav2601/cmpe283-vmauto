@@ -1,6 +1,7 @@
 package srkarra.cmpe283.p1.config;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,10 @@ import com.vmware.vim25.mo.ServiceInstance;
 public class Config {
 	
 	public enum ConfigIdents {
-		VMWARE_HOST  ("vmware.host"),
-		VMWARE_USER  ("vmware.user"),
-		VMWARE_PASS  ("vmware.pass"),
+		VMWARE_PARENTHOST  	("vmware.parenthost"),
+		VMWARE_HOST  		("vmware.host"),
+		VMWARE_USER  		("vmware.user"),
+		VMWARE_PASS  		("vmware.pass"),
 		
 		VM_HEARTBEAT("vm.heartbeat"),
 		VM_SNAPSHOT_INTERVAL("vm.snapshot.interval"),
@@ -52,11 +54,10 @@ public class Config {
 	public static final String VMWARE_TASK_SUCCESS_STRING 				= "success";
 	public static final String VMWARE_POWER_ON_ALARM_TRIG_SUFFIX		= "-OnAlarmTrig";
 	
-	public static final String 	REST_API_POST_HOST_URL	  	= "http://cmpe283.srkarra.com/stats/vhost";
-	public static final String 	REST_API_POST_VM_URL		= "http://cmpe283.srkarra.com/stats/vm";
-	public static final String 	REST_API_POST_VM_LOG		= "http://cmpe283.srkarra.com/stats/log";
+	public static final String 	REST_API_POST_HOST_URL	  	= "http://cmpe283.srkarra.com/v2/stats/vhost";
+	public static final String 	REST_API_POST_VM_URL		= "http://cmpe283.srkarra.com/v2/stats/vm";
+	public static final String 	REST_API_POST_VM_LOG		= "http://cmpe283.srkarra.com/v2/stats/log";
 	public static final int 	REST_API_RESPONSE_SUCCESS 	= 200;
-	
 	public static final int 	TYPE_HOST 			= 1;
 	public static final int 	TYPE_VIRTUALMACHINE = 2;
 	
@@ -121,10 +122,18 @@ public class Config {
 	
 	/**
 	 * Returns instance of the Service Instance  
+	 * @throws MalformedURLException 
 	 */
-	public static ServiceInstance getServiceInstance()  {
+	public static ServiceInstance getServiceInstance() throws MalformedURLException  {
+			return getServiceInstance( new URL(getProperty( ConfigIdents.VMWARE_HOST )) );
+	}
+	
+	/**
+	 * Returns instance of the Service Instance  
+	 */
+	public static ServiceInstance getServiceInstance(final URL host)  {
 		try {
-			ServiceInstance si = new ServiceInstance(new URL(getProperty(ConfigIdents.VMWARE_HOST)), getProperty(ConfigIdents.VMWARE_USER), getProperty(ConfigIdents.VMWARE_PASS), true);
+			ServiceInstance si = new ServiceInstance(host, getProperty(ConfigIdents.VMWARE_USER), getProperty(ConfigIdents.VMWARE_PASS), true);
 			serviceInstances.add(si);
 			return si;
 		}
@@ -134,8 +143,6 @@ public class Config {
 			return null; 
 		}
 	}
-	
-	
 	
 
 }

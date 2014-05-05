@@ -26,8 +26,11 @@ public class Service extends Thread {
 			try{
 				System.out.println("Storing Stats at " + new Date().getTime());
 				serviceInstance = Config.getServiceInstance();
-//				storeStats();
-//				Thread.sleep(10800000);
+
+				storeStats();
+				Thread.sleep(14400000);
+				
+				//DRS & DPM
 				Manager mgr = new Manager(serviceInstance);
 				mgr.start();
 			}
@@ -46,9 +49,9 @@ public class Service extends Thread {
 				System.out.println(Utilities.getVmStatistics(vm, serviceInstance));
 				
 				//Store Log Stats
-//				System.out.println(Utilities.getLogStatistics("vmstat"  , vm.getName()));
-//				System.out.println(Utilities.getLogStatistics("iostat", vm.getName()));
-//				System.out.println(Utilities.getLogStatistics("mpstat", vm.getName()));
+				System.out.println(Utilities.getLogStatistics("vmstat"  , vm.getName()));
+				System.out.println(Utilities.getLogStatistics("iostat", vm.getName()));
+				System.out.println(Utilities.getLogStatistics("mpstat", vm.getName()));
 			}
 			
 			//Store Host Stats

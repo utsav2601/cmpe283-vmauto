@@ -112,6 +112,18 @@ public class Utilities {
 		// Create VM Statistics Object and assign local values
 		vmStats = (VmStatistics) getMetrics(si, vm.getName(), vm, Config.TYPE_VIRTUALMACHINE); 
 		
+		//Get Thread and Process count
+		try{
+			String resultProcess = getStats("ps -e | wc -l");
+			vmStats.setProcessCount(Integer.parseInt(resultProcess));
+			 
+			String resultThread = getStats("ps -eaFM | wc -l");
+			vmStats.setThreadCount(Integer.parseInt(resultThread));
+		}
+		catch(Exception ee){/*do nothing*/};
+		
+		vmStats.setVmName			( vm.getName()				 );
+		vmStats.setTimeStamp		( new Date()				 );
 		vmStats.setCpuUsage			( overallCpuUsage 			 );
 		vmStats.setGuestFullName	( guestFullName 			 );
 		vmStats.setGuestIpAddress	( ipAddress 				 );
@@ -121,7 +133,7 @@ public class Utilities {
 		vmStats.setStorageUsed		( commitedStorage 			 );
 		vmStats.setSupportsSnapShot	( multipleSnapshotsSupported );
 		vmStats.setSystemUpTime		( poweredOnTime 			 );
-		vmStats.setName				( vmName 					 );
+		vmStats.setVmName			( vmName 					 );
 		vmStats.setTimeStamp		( new Date()				 );
 		System.out.println(vmStats);
 		
@@ -133,7 +145,7 @@ public class Utilities {
 			if(response != null)
 			{
 				if(response.getResponseCode() == Config.REST_API_RESPONSE_SUCCESS)
-					System.out.println("Data saved succesfully for " + vmStats.getName());
+					System.out.println("Data saved succesfully for " + vmStats.getVmName());
 				else
 					System.out.println("Unable to get response from webservice");
 			}
@@ -169,6 +181,8 @@ public class Utilities {
 		
 		hostStats = (HostStatistics) getMetrics(si, host.getName(), host, Config.TYPE_HOST);		
 		
+		hostStats.setName(host.getName());
+		hostStats.setTimeStamp(new Date());
 		hostStats.setCpuHz(cpuHz);
 		hostStats.setCpuUsage(overallCpuUsage);
 		hostStats.setMemUsage(overallMemUsage);
@@ -338,9 +352,6 @@ public class Utilities {
 							((HostStatistics) statistics).setNetBytesRxAverage((int) longs[longs.length-1]);
 						else if (val1.getId().getCounterId() == 395)
 							((HostStatistics) statistics).setNetBytesTxAverage((int) longs[longs.length-1]);
-						if(((HostStatistics) statistics).getName() == null)
-							((HostStatistics) statistics).setName(entityName);
-						((HostStatistics) statistics).setTimeStamp(new Date());
 					}
 					else
 					{
@@ -362,9 +373,6 @@ public class Utilities {
 							((VmStatistics) statistics).setNetBytesRxAverage((int) longs[longs.length-1]);
 						else if (val1.getId().getCounterId() == 395)
 							((VmStatistics) statistics).setNetBytesTxAverage((int) longs[longs.length-1]);
-						if(((VmStatistics) statistics).getName() == null)
-							((VmStatistics) statistics).setName(entityName);
-						((VmStatistics) statistics).setTimeStamp(new Date());
 					}
 					
 					System.out.println("CounterID: " + val1.getId().getCounterId()

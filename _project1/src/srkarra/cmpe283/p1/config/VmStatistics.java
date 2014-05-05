@@ -33,6 +33,7 @@ public class VmStatistics {
 	private Integer diskUsageAverage = 0;
 	private Date 	timeStamp = null;
 	private Integer threadCount = 0;
+	private Integer processCount = 0;
 	
 	/**
 	 * @return the threadCount
@@ -62,8 +63,6 @@ public class VmStatistics {
 		this.processCount = processCount;
 	}
 
-	private Integer processCount = 0;
-	
 	/**
 	 * @return the diskReadAverage
 	 */
